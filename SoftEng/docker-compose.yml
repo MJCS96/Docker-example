@@ -1,0 +1,33 @@
+version: '3'
+services: 
+  docker-mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=asd
+      - MYSQL_PASSWORD=root
+  spring-docker-service:
+    image: spring-docker-service
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=-Dspring.profiles.active=container
+      - DATABASE_HOST=docker-mysql
+      - DATABASE_USER=asd
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=test  
+      - DATABASE_PORT=3306
+  angular-docker-service:
+    image: angular-docker-service
+    restart: always
+    build:
+      context: ./SE/se-web
+      dockerfile: ./Dockerfile
+    ports:
+      - 4200:4200

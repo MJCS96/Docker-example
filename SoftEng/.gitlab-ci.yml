@@ -1,0 +1,26 @@
+stages:
+  - build
+  - check
+  - docker
+
+test:
+    image: frekele/gradle:4.8-jdk8u172
+    stage: check
+    script:
+        - cd SE && gradle test
+
+    
+build:
+    image: gradle
+    stage: build
+    script:
+        - cd SE && gradle build -x test
+    tags:
+        - docker
+        
+docker:
+    image: docker:18.06
+    stage: docker
+    script:
+        - docker build . -t spring-docker-service
+        
